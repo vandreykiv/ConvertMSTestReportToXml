@@ -1,0 +1,9 @@
+MSBuild task for convert MSTest coverage report to XML.
+
+Usage:
+	<UsingTask TaskName="ConvertVSCoverageToXml" AssemblyFile="$(MSBuildExtensionsPath)\CI.MSBuild.Tasks.dll" />
+	<Target Name="Coverage" DependsOnTargets="Test">
+		<ConvertVSCoverageToXml CoverageFiles="$(MSBuildThisFileDirectory)..\..\TestResults\TestResults\In\$(ComputerName)\data.coverage"
+                                SymbolsDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\TestResults\Out\"
+                                OutputDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\" />
+	</Target>
