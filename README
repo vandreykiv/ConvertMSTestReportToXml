@@ -7,3 +7,19 @@ Usage:
                                 SymbolsDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\TestResults\Out\"
                                 OutputDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\" />
 	</Target>
+	
+To convert XML coverage report to EMMA format just add next simple MSBuild task. 
+Copy "msxsl.exe" and "MSTestCoverageToEmma.xsl" from "Convert to Emma" directory to your MSBuild extension directory.
+  	<ItemGroup>
+		<Msxsl Include='"$(MSBuildExtensionsPath)\msxsl.exe"'/>
+		<TestCoverageToEmma Include='"$(MSBuildExtensionsPath)\MSTestCoverageToEmma.xsl"'/>
+	</ItemGroup>
+	<UsingTask TaskName="ConvertVSCoverageToXml" AssemblyFile="$(MSBuildExtensionsPath)\CI.MSBuild.Tasks.dll" />
+	<Target Name="Coverage" DependsOnTargets="Test">
+		<ConvertVSCoverageToXml CoverageFiles="$(MSBuildThisFileDirectory)..\..\TestResults\TestResults\In\$(ComputerName)\data.coverage"
+                                SymbolsDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\TestResults\Out\"
+                                OutputDirectory="$(MSBuildThisFileDirectory)..\..\TestResults\" />
+		<Exec Command="@(Msxsl) $(MSBuildThisFileDirectory)..\..\TestResults\data.xml @(TestCoverageToEmma) -o $(MSBuildThisFileDirectory)..\..\TestResults\coverage.xml" />
+	</Target>
+
+	
